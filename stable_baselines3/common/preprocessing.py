@@ -161,6 +161,21 @@ def get_obs_shape(
         raise NotImplementedError(f"{observation_space} observation space is not supported")
 
 
+def get_obs_dtype(
+    observation_space: spaces.Space,
+) -> Union[np.dtype, Dict[str, np.dtype]]:
+    """
+    Get the dtypes of the observation (useful for the buffers).
+
+    :param observation_space:
+    :return:
+    """
+    if isinstance(observation_space, spaces.Dict):
+        return {key: get_obs_dtype(subspace) for (key, subspace) in observation_space.spaces.items()}
+    else:
+        return observation_space.dtype
+
+
 def get_flattened_obs_dim(observation_space: spaces.Space) -> int:
     """
     Get the dimension of the observation space when flattened.
